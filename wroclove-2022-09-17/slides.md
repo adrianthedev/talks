@@ -1,6 +1,7 @@
 ---
 theme: default
-background: https://source.unsplash.com/collection/94734566/1920x1080
+background: >-
+  https://images.unsplash.com/photo-1578853166038-e19018efc083?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
 class: text-center
 highlighter: shiki
 lineNumbers: false
@@ -20,7 +21,7 @@ title: How To Package A Rails Engine
 <!--
 Dzień dobry everyone!
 
-I'm thrilled to be here and talk to you about the magic of Rails.
+I'm thrilled to be here.
 
 I'm going to talk to you today about packaging a Rails engine. From generation to automation.
 -->
@@ -467,7 +468,7 @@ GA also has a marketplace of pre-made actions ready for you to use like git chec
 
 # Automate testing
 
-```yaml{all|1|3-9|11|12-20|21-32|34|36-40|42|43|44-48|49-50|51-56|57-59|60-64|65-71}{maxHeight:'100'}
+```yaml{all|1|3-9|11|12-20|15-20|21-32|29|34|36-40|42|43|44-48|48|49-50|51-56|57-59|60-64|61|65-71}{maxHeight:'100'}
 name: Tests
 
 on:
@@ -528,7 +529,7 @@ jobs:
       id: run_tests
       run: bundle exec rspec
     - uses: actions/upload-artifact@v2
-      if: always() && steps.run_tests.outcome == 'failure'
+      if: steps.run_tests.outcome == 'failure'
       with:
         name: rspec_failed_screenshots
         path: ./spec/dummy/tmp/screenshots
@@ -666,7 +667,7 @@ We also get a nice list with all the contributors for that release. -->
 
 # Automate cutting a release
 
-```yaml{all|2-5|9|10-13|14-17|18-19|20-22|23-25|26-38|39-48|49-58}{maxHeight:'100'}
+```yaml{all|2-5|9|10-13|14-17|18-19|20-22|23-25|26-38|33|34|35|38-47|48-57}{maxHeight:'100'}
 name: Build, Generate Ruby Gem and Release
 on:
   push:
@@ -701,8 +702,7 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
-        body: |
-          ${{fromJson(steps.get_release_notes.outputs.release_notes)}}
+        body: ${{fromJson(steps.get_release_notes.outputs.release_notes)}}
         draft: false
         prerelease: false
     - name: Upload Release Asset
@@ -732,6 +732,42 @@ jobs:
 So we talked about adding a new feature or fix to the repo using gitflow (branch, fix, commit, pr, merge), we talked about adding tags to PRs, and cutting github releases, and now we're going to put everything together using...  you guessed it GitHub Actions.
 
 So let's go through this action. -->
+---
+
+# How can others use it?
+
+<div v-click>
+
+- `bundle add 'admin'`
+
+</div>
+
+<div v-click>
+
+```ruby
+# Gemfile
+gem 'admin'
+```
+
+</div>
+
+<div v-click>
+
+```ruby
+# config/routes.rb
+
+Rails.application.routes.draw do
+  root "home#index"
+
+  mount Admin::Engine => "/admin"
+end
+```
+
+
+</div>
+
+<img v-click src="/img/admin_demo.gif" />
+
 ---
 
 # Recap
@@ -806,4 +842,3 @@ class: text-center
     <ri-user-3-line class="opacity-50"/>
     <div><a href="https://rubyromania.ro" target="_blank">rubyromania.ro</a></div>
 </div>
-
