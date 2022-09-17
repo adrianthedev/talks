@@ -602,8 +602,6 @@ We run this for every PR. -->
   <img src="/img/tag_refactor.jpg" class="m-auto">
 </div>
 
-<div v-click>
-
 ```yaml{all|2-4|13-15}{maxHeight:'100'}
 name: PR Labeler
 on:
@@ -621,8 +619,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-</div>
 
 <!-- You might have a small repo or a big one, but the fact of the matter is that things can get messy fast and tagging PRs definitely helps with housekeeping.
 
@@ -770,6 +766,98 @@ end
 
 ---
 
+# Asset pipeline
+
+<div class="flex justify-between">
+<div>
+  <div v-click>
+
+  1. Hook into the asset pipeline
+
+  </div>
+
+  <span v-click class="text-7xl">🤷‍♂️</span>
+  <div v-click>
+
+  2. Precompile assets on build-time
+
+  <span class="flex text-7xl"><img src="/img/avo_logomark.png" class="h-16"> 😎</span>
+
+  </div>
+</div>
+<div>
+<img v-click src="/img/superhero.webp">
+</div>
+</div>
+
+
+
+---
+
+# Add production compilation scripts
+
+```json{0|1|7|8|6|all}
+# package.json
+{
+  "name": "avo",
+  "description": "The most beautiful, easy-to-use Ruby on Rails admin framework",
+  "scripts": {
+    "prod:build": "yarn prod:build:js && yarn prod:build:css",
+    "prod:build:js": "esbuild app/javascript/*.js --bundle --sourcemap --minify --outdir=public/admin-assets",
+    "prod:build:css": "tailwindcss -i ./app/assets/stylesheets/admin.css -o ./public/admin-assets/admin.css --postcss"
+  }
+}
+```
+
+```txt{0|all|6-7|8-9|3-5|10-13}
+├── app
+│   ├── assets
+│   │   ├── builds
+│   │   │   ├── admin.tailwind.css
+│   │   │   └── admin.js
+│   │   └── stylesheets
+│   │       └── admin.tailwind.css
+│   └── javascript
+│       └── admin.js
+└── public
+    └── admin-assets
+        ├── admin.css
+        └── admin.js
+```
+
+---
+
+# Use a middleware
+
+```ruby{all|6-10}
+# lib/admin/engine.rb
+module Admin
+  class Engine < ::Rails::Engine
+    isolate_namespace Admin
+
+    config.app_middleware.use(
+      Rack::Static,
+      urls: ["/admin-assets"],
+      root: Admin::Engine.root.join("public")
+    )
+  end
+end
+```
+
+
+```erb{99|1|2|3-4|6-7}
+# app/views/layouts/avo/application.html
+<% if Avo::PACKED %>
+  <%= javascript_include_tag "/avo-assets/avo", "data-turbo-track": "reload", defer: true %>
+  <%= stylesheet_link_tag "/avo-assets/avo", "data-turbo-track": "reload", defer: true %>
+<% else %>
+  <%= javascript_include_tag "avo", "data-turbo-track": "reload", defer: true %>
+  <%= stylesheet_link_tag "avo", "data-turbo-track": "reload", defer: true %>
+<% end %>
+```
+
+---
+
 # Recap
 
 - what is a Rails engine?
@@ -805,21 +893,28 @@ end
 
 
 <div class="fle" v-click>
+  <div class="left-0 ml-0">
 
-<div class="left-0 ml-0">
+  ### Short Ruby Newsletter
 
-### Short Ruby Newsletter
+  <img src="/img/short_ruby_logo.png" class="w-auto absolute inset-auto left-auto right-0 -mt-12 mr-16 w-16" />
 
-<img src="/img/short_ruby_logo.png" class="w-auto absolute inset-auto left-auto right-0 -mt-12 mr-16 w-16" />
+  [shortruby.com](https://shortruby.com/)
 
-[shortruby.com](https://shortruby.com/)
+  </div>
 
+  <img src="/img/short_ruby.gif" class="w-90 absoleute inset-auto left-12 top-64" />
+
+  </div>
 </div>
 
-<img src="/img/short_ruby.gif" class="w-90 absoleute inset-auto left-12 top-64" />
+---
 
-</div>
-</div>
+# Be awesome!
+
+1. Build useful things
+2. Share it with others
+3. Be kind
 
 ---
 layout: center
