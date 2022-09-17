@@ -1,4 +1,6 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# How to package a Rails Engine - From generation to automation
+
+[how-to-package-a-rails-engine.netlify.app](https://how-to-package-a-rails-engine.netlify.app)
 
 To start the slide show:
 
