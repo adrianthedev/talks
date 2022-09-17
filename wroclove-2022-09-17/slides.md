@@ -53,7 +53,7 @@ layout: intro
     <div><a href="https://avo.cool" target="_blank">avo.cool</a></div>
 </div>
 
-<img src="https://adrianthedev.com/img/profile_square.jpg" class="rounded-full w-40 abs-tr mt-16 mr-12"/>
+<img src="/img/profile_square.jpg" class="rounded-full w-40 abs-tr mt-16 mr-12"/>
 
 <!--
 My name is Adrian and I'm the author of Avo.
@@ -872,6 +872,7 @@ end
   - PR labeling
   - release notes
   - automate the final release
+- be an asset hero
 
 ---
 
@@ -912,9 +913,22 @@ end
 
 # Be awesome!
 
+<div v-click>
+
 1. Build useful things
+
+</div>
+<div v-click>
+
 2. Share it with others
+
+</div>
+
+<div v-click>
+
 3. Be kind
+
+</div>
 
 ---
 layout: center
